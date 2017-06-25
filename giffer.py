@@ -10,7 +10,7 @@ def convert(filename):
     subprocess.call(["ffmpeg", "-i", "files/"+ filename, "-vf", "scale=320:-1:sws_dither=ed,fps=10,palettegen", "-y", "/tmp/palette.png"])
     subprocess.call(["ffmpeg", "-i", "files/"+ filename, "-i", "/tmp/palette.png", "-lavfi", "scale=320:-1:sws_dither=ed,fps=10 [x]; [x][1:v] paletteuse", "-y", "files/" + os.path.splitext(filename)[0] + ".gif"])
 
-UPLOAD_FOLDER = 'files/'
+UPLOAD_FOLDER = '__files/'
 ALLOWED_EXTENSIONS = set(['mp4'])
 
 if not os.path.isdir(UPLOAD_FOLDER):
