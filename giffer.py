@@ -10,7 +10,7 @@ def convert(filename):
     subprocess.call(["ffmpeg", "-i", "files/"+ filename, "-vf", "scale=320:-1:sws_dither=ed,fps=10,palettegen", "-y", "/tmp/palette.png"])
     subprocess.call(["ffmpeg", "-i", "files/"+ filename, "-i", "/tmp/palette.png", "-lavfi", "scale=320:-1:sws_dither=ed,fps=10 [x]; [x][1:v] paletteuse", "-y", "files/" + os.path.splitext(filename)[0] + ".gif"])
 
-UPLOAD_FOLDER = '__files/'
+UPLOAD_FOLDER = 'files/'
 ALLOWED_EXTENSIONS = set(['mp4'])
 
 if not os.path.isdir(UPLOAD_FOLDER):
@@ -46,9 +46,9 @@ def upload_file():
             th.start()
             return redirect(url_for('upload_file',
                                     filename=filename))
-    files = glob.glob(os.path.join(UPLOAD_FOLDER, "*"))
+    files = [file_.replace(" ", "%20") for file_ in glob.glob(os.path.join(UPLOAD_FOLDER, "*"))]
     html_files = "<ul class=\"list-group\">{}</ul>".format(
-                "\n".join(["<li class=\"list-group-item\"><a href=/files/{filename}>{filename}</a></li>".format(filename=os.path.basename(file_)) for file_ in files]))
+                "\n".join(["<li class=\"list-group-item\"><a href=/files/{filename_url}>{filename}</a></li>".format(filename_url=os.path.basename(file_), filename=os.path.basename(file_).replace("%20", " ")) for file_ in files]))
     return '''
     <!doctype html>
     <head>
